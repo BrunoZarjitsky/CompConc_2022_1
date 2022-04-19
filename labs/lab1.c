@@ -1,3 +1,6 @@
+// Bruno Zarjitsky
+// 115117384
+// 19/04/2022 - LAB 1 Comp Conc
 #include<stdio.h>
 #include<stdlib.h>
 #include<pthread.h>
@@ -33,7 +36,7 @@ void * tarefa (void *arg){
 int main(void){
     pthread_t tid[N_THREADS];
     t_Args *arg;
-    int testes_aprovados = 0, testes_regeitados = 0;
+    int testes_aprovados = 0, testes_rejeitados = 0;
 
     // Preenche o vetor
     for (int i = 0; i < TAM_VETOR; i++){
@@ -71,10 +74,10 @@ int main(void){
             testes_aprovados ++;
         }
         else{
-            testes_regeitados ++;
+            testes_rejeitados ++;
         }
     }
-    printf("Testes aprovados: %d\nTestes regeitados: %d\n", testes_aprovados, testes_regeitados);
+    printf("Testes aprovados: %d\nTestes rejeitados: %d\n", testes_aprovados, testes_rejeitados);
     pthread_exit(NULL);
 
     return 0;
