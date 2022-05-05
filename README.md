@@ -1,12 +1,12 @@
 # Computação Concorrente 2022.1
-*Bruno Zarjitsky*
-*115117384*
+**Bruno Zarjitsky**<br>
+**115117384**
 
 ***
 
 ## LAB 3
 
-*Objetivo:* Implementar uma solução sequencial e uma concorrente para o problema de encontrar o *menor* e o *maior* valor de um vetor de números reais.
+**Objetivo:** Implementar uma solução sequencial e uma concorrente para o problema de encontrar o *menor* e o *maior* valor de um vetor de números reais.
 
 
 ### 10^5
