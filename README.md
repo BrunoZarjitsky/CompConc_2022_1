@@ -6,7 +6,7 @@
 
 ## LAB 3
 
-**Objetivo:** Implementar uma solução sequencial e uma concorrente para o problema de encontrar o *menor* e o *maior* valor de um vetor de números reais.
+**Objetivo:** Implementar uma solução sequencial e uma concorrente para o problema de encontrar o **menor** e o **maior** valor de um vetor de números reais.
 
 
 ### 10^5
