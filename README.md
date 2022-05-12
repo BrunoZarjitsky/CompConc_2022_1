@@ -12,10 +12,9 @@
 
 Numero de threads | Tempo sequencial | Tempo concorrente | Desempenho
 ----------------- |------------------|-------------------|------------
-1 | 1.750892 | 1.736151 | 1.008490 
-2 | 1.856958 | 0.964454 | 1.925398 
-4 | 1.780045 | 0.516644 | 3.445396 
-8 | 1.812759 | 0.449639 | 4.031586 
+1 | 0.554412 | 0.536575 | 1.033242
+2 | 0.552029 | 0.272191 | 2.028094
+4 | 0.543418 | 0.155139 | 3.502780
 
 ***
 
@@ -23,17 +22,19 @@ Numero de threads | Tempo sequencial | Tempo concorrente | Desempenho
 
 Numero de threads | Tempo sequencial | Tempo concorrente | Desempenho
 ----------------- |------------------|-------------------|------------
-1 | 177.543795 | 177.762807 | 0.998768 
-2 | 176.036875 | 96.749343 | 1.819515 
-4 | 175.084112 | 57.335915 | 3.053655 
-8 | 175.322447 | 50.181216 | 3.493786 
+1 | 53.486894 | 51.987066 | 1.028850
+2 | 52.476357 | 26.363255 | 1.990511
+4 | 52.494540 | 15.686372 | 3.346506
 
 ***
 
 ### 10^8
 
-Para um vetor com 10^8 rodei apenas o concorrente para 8 nucleos, e custou 509.455990 segundos.<br>
-Se o desempenho concorrente fosse numero_de_threads vezes melhor que o sequencial, o programa sequencial levaria pelo menos 67 minutos para chegar ao final da execução. Por isso não rodei para vetores deste tamanho.
+Numero de threads | Tempo sequencial | Tempo concorrente | Desempenho
+----------------- |------------------|-------------------|------------
+1 | 535.481880 | 589.780860 | 0.907934
+2 | 535.464544 | 329.257393 | 1.626279
+4 | 523.239131 | 175.577120 | 2.980110
 
 
 ***

@@ -21,12 +21,13 @@ unsigned long long int soma_primos_concorrente = 0;
 
 
 int posicao_vetor_saida_concorrente = 0; //variavel compartilhada entre as threads
-pthread_mutex_t mutex; //variavel de lock para exclusao mutua
 
 typedef struct {
     int inicio_do_vetor;
     int dimensao_do_vetor;
     int tamanho_do_passo;
+    int total_de_primos;
+    unsigned long long int soma_dos_primos;
 } CaracteristicasVetor;
 
 // Funcao para imprimir o vetor
@@ -50,10 +51,14 @@ int ehPrimo (long long int numero){
     if (numero == 2){
         return 1;
     }
-    if (numero%2 == 0){
+    if (numero%2 == 0 || numero%3 == 0){
         return 0;
     }
-    for (int i = 3; i < sqrt(numero)+1; i += 2){
+    for (int i = 5; i < sqrt(numero)+1; i += 4){
+        if (numero%i == 0){
+            return 0;
+        }
+        i += 2;
         if (numero%i == 0){
             return 0;
         }
@@ -61,45 +66,26 @@ int ehPrimo (long long int numero){
     return 1;
 }
 
-void raizDosPrimos(int vetor_de_entrada[], float vetor_de_saida[], CaracteristicasVetor *arg){
-    int posicao_vetor_saida = 0;
-    for (int i = arg->inicio_do_vetor; i < arg->dimensao_do_vetor; i += arg->tamanho_do_passo) {
-        if (ehPrimo(vetor_de_entrada[i])){
-            vetor_de_saida[posicao_vetor_saida] = sqrt(vetor_de_entrada[i]);
-            posicao_vetor_saida++;
-            soma_primos_sequencial += vetor_de_entrada[i];
-        }
-    }
-}
-
-int contaPrimos(int vetor_de_entrada[], CaracteristicasVetor *arg){
+void raizDosPrimos(CaracteristicasVetor *arg, float vetor_de_saida[]){
+    int soma = 0;
     int total_de_primos = 0;
-
-    for (int i = arg->inicio_do_vetor; i < arg->dimensao_do_vetor; i += arg->tamanho_do_passo){
-        if (ehPrimo(vetor_de_entrada[i])){
+    for (int i = arg->inicio_do_vetor; i < arg->dimensao_do_vetor; i += arg->tamanho_do_passo) {
+        if (ehPrimo(vetor_entrada[i])){
+            vetor_de_saida[i] = sqrt(vetor_entrada[i]);
+            soma += vetor_entrada[i];
             total_de_primos++;
         }
+        else {
+            vetor_de_saida[i] = vetor_entrada[i];
+        }
     }
-    return total_de_primos;
-}
-
-void * contaPrimosConcorrente (void * arg){
-    CaracteristicasVetor *car_vet_thread = (CaracteristicasVetor*) arg;
-    total_primos_thread[car_vet_thread->inicio_do_vetor] = contaPrimos(vetor_entrada, car_vet_thread);
-    pthread_exit(NULL);
+    arg->soma_dos_primos = soma;
+    arg->total_de_primos = total_de_primos;
 }
 
 void * raizDosPrimosConcorrente (void * arg){
     CaracteristicasVetor *car_vet_thread = (CaracteristicasVetor*) arg;
-    for (int i = car_vet_thread->inicio_do_vetor; i < car_vet_thread->dimensao_do_vetor; i += car_vet_thread->tamanho_do_passo){
-        if (ehPrimo(vetor_entrada[i])){
-            pthread_mutex_lock(&mutex);
-            vetor_saida_concorrente[posicao_vetor_saida_concorrente] = sqrt(vetor_entrada[i]);
-            posicao_vetor_saida_concorrente++;
-            soma_primos_sequencial += vetor_entrada[i];
-            pthread_mutex_unlock(&mutex);
-        }
-    }
+    raizDosPrimos(car_vet_thread, vetor_saida_concorrente);
     pthread_exit(NULL);
 }
 
@@ -123,8 +109,6 @@ int main(int argc, char *argv[]){
 
     // Inicia a lib do rand()
     srand(time(0));
-    // Inicia o mutex
-    pthread_mutex_init(&mutex, NULL);
 
     // Leitura dos parametros de entrada
     if (argc<3){
@@ -137,8 +121,9 @@ int main(int argc, char *argv[]){
     // Aloca memoria
     id_thread = (pthread_t*) malloc(sizeof(pthread_t) * numero_de_threads);
     vetor_entrada = (int*) malloc(sizeof(int) * dimensao_do_vetor);
+    vetor_saida_sequencial = (float*) malloc(sizeof(float) * dimensao_do_vetor);
+    vetor_saida_concorrente = (float*) malloc(sizeof(float) * dimensao_do_vetor);
     car_vet_thread = (CaracteristicasVetor*) malloc(sizeof(CaracteristicasVetor) * numero_de_threads);
-    total_primos_thread = (int*) malloc(sizeof(int) * numero_de_threads);
 
     // Inicializacao do vetor
     for (int i = 0; i < dimensao_do_vetor; i++){
@@ -157,10 +142,10 @@ int main(int argc, char *argv[]){
     car_vet_sequencial.inicio_do_vetor = 0;
     car_vet_sequencial.dimensao_do_vetor = dimensao_do_vetor;
     car_vet_sequencial.tamanho_do_passo = 1;
-    total_de_primos_sequencial = contaPrimos(vetor_entrada, &car_vet_sequencial);
 
-    vetor_saida_sequencial = (float*) malloc(sizeof(float) * total_de_primos_sequencial);
-    raizDosPrimos(vetor_entrada, vetor_saida_sequencial, &car_vet_sequencial);
+    raizDosPrimos(&car_vet_sequencial, vetor_saida_sequencial);
+    soma_primos_sequencial = car_vet_sequencial.soma_dos_primos;
+    total_de_primos_sequencial = car_vet_sequencial.total_de_primos;
 
     GET_TIME(fim);
     tempo_sequencial = fim-inicio;
@@ -172,29 +157,17 @@ int main(int argc, char *argv[]){
         (car_vet_thread + i)->inicio_do_vetor = i;
         (car_vet_thread + i)->dimensao_do_vetor = dimensao_do_vetor;
         (car_vet_thread + i)->tamanho_do_passo = numero_de_threads;
-        total_primos_thread[i] = 0;
-        if (pthread_create(id_thread + i, NULL, contaPrimosConcorrente, (void *) (car_vet_thread + i))){
-            fprintf(stderr, "ERRO--pthread_create\n");
-            break;
-        }
-    }
-    total_de_primos_concorrente = 0;
-    for (int i = 0; i < numero_de_threads; i++){
-        pthread_join(*(id_thread + i), NULL);
-        total_de_primos_concorrente += total_primos_thread[i];
-    }
-    vetor_saida_concorrente = (float*) malloc(sizeof(float) * total_de_primos_concorrente);
-    for (int i = 0; i < numero_de_threads; i++){
-        (car_vet_thread + i)->inicio_do_vetor = i;
-        (car_vet_thread + i)->dimensao_do_vetor = dimensao_do_vetor;
-        (car_vet_thread + i)->tamanho_do_passo = numero_de_threads;
         if (pthread_create(id_thread + i, NULL, raizDosPrimosConcorrente, (void *) (car_vet_thread + i))){
             fprintf(stderr, "ERRO--pthread_create\n");
             break;
         }
     }
+    soma_primos_concorrente = 0;
+    total_de_primos_concorrente = 0;
     for (int i = 0; i < numero_de_threads; i++){
         pthread_join(*(id_thread + i), NULL);
+        soma_primos_concorrente += (car_vet_thread + i)->soma_dos_primos;
+        total_de_primos_concorrente += (car_vet_thread + i)->total_de_primos;
     }
 
     GET_TIME(fim);
@@ -210,19 +183,21 @@ int main(int argc, char *argv[]){
         printf("Invalidado !\n");
     }
     printf("Total de primos: %d\n", total_de_primos_concorrente);
+    printf("Soma de primos: %llu\n", soma_primos_sequencial);
     
     printf("\n");
     printf("Tempo Sequencial : %f\n", tempo_sequencial);
     printf("Tempo Concorrente: %f\n", tempo_concorrente);
+    printf("Desenpenho: %f\n", desempenho);
+
+    printf("\n%d | %f | %f | %f\n", numero_de_threads, tempo_sequencial, tempo_concorrente, desempenho);
 
     // Libera memoria
-    pthread_mutex_destroy(&mutex);
     free(vetor_saida_sequencial);
     free(vetor_saida_concorrente);
     free(vetor_entrada);
     free(id_thread);
     free(car_vet_thread);
-    free(total_primos_thread);
 
     return 0;
 }
