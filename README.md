@@ -6,7 +6,7 @@
 
 ## LAB 4
 
-**Objetivo:** Implementar um metodo sequencial e um concorrente para encontrar os numeros primos de um vetor, calcular suas raizes, e armazenar em vetores de saida apenas as **raizes dos numeros primos**.
+**Objetivo:** Implementar um metodo sequencial e um concorrente para encontrar os numeros primos de um vetor, calcular suas raizes.
 
 ### 10^5
 
