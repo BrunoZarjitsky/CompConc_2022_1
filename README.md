@@ -4,6 +4,46 @@
 
 ***
 
+## LAB 5
+
+### Atividade 1
+
+Alterando o numero de threads A para 1, a execução nunca vai terminar pois vai entrar em deadlock<br>
+
+### Atividade 2
+
+Sim, sempre foi atendida, pois o pthread_cond_broadcast vai liberar todas as threads independente de quantas estiverem bloqueadas, então para todos os casos possiveis
+(0 bloqueios, 1 bloqueio, 2 bloqueio) será realizado o desbloqueio da execução.<br>
+
+### Atividade 3
+
+Sim, o log de execução foi sempre correto<br>
+Não podemos substiuir a linha 50 pela 51, pois entre o recebimento do sinal, e o print do valor x, esse x já pode ter sido incrementado novamente, e não ser multiplo de 10<br>
+Invertendo essas linhas, o log de execução não esteve sempre correto, aconteceu da thread B imprimir um valor não multiplo de 10, no caso 23.<br>
+
+### Atividade 4
+
+Alguns exemplos de execução:<br><br>
+Seja bem vindo<br>
+Aceita um copo de agua?<br>
+Fique a vontade.<br>
+Sente-se por favor.<br>
+Volte sempre!<br>
+***
+Seja bem vindo<br>
+Fique a vontade.<br>
+Aceita um copo de agua?<br>
+Sente-se por favor.<br>
+Volte sempre!<br>
+***
+Seja bem vindo<br>
+Fique a vontade.<br>
+Sente-se por favor.<br>
+Aceita um copo de agua?<br>
+Volte sempre!<br>
+
+***
+
 ## LAB 4
 
 **Objetivo:** Implementar um metodo sequencial e um concorrente para encontrar os numeros primos de um vetor, calcular suas raizes.
