@@ -52,7 +52,7 @@ class ThreadClass extends Thread {
     private int id_thread;
 
     // Variaveis compartilhados com outras threads
-    private DataStructure s;
+    private DataStructure data;
     private int even_count;
 
     public ThreadClass(int id_thread, DataStructure data) {
@@ -66,7 +66,7 @@ class ThreadClass extends Thread {
         while (!this.data.process_ended()) {
             Integer vector_element = this.data.get_value_and_increase_index();
             if (vector_element != null) { // Necessario para evitar condicao de corrida 
-                this.even_count + this.is_even(vector_element); // Se par soma 1, se não par soma 0 na contagem de pares
+                this.even_count = this.even_count + this.is_even(vector_element); // Se par soma 1, se não par soma 0 na contagem de pares
             }
         }
     }
@@ -124,7 +124,7 @@ class Lab7 {
         for (int i=0; i<threads.length; i++) {
             try { 
                     threads[i].join(); 
-                    even_count_concurrent += ((int)((ThreadClass) threads[0]).get_even_count())
+                    even_count_concurrent += ((int)((ThreadClass) threads[0]).get_even_count());
                 } 
             catch (InterruptedException e) {
                     return; 
