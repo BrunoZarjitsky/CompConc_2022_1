@@ -4,6 +4,28 @@
 
 ***
 
+## LAB 8
+
+Implementação de uma aplicação concorrente em Java usando o padrão básico **leitores/escritores**
+<br>
+A implementação é dividida em 3 threads sendo 
+
+### T1
+Incrementa a variavel de controle
+### T2 
+Le a variavel de controle e imprime se ela é par ou impar
+### T3
+Le a variavel e imprime ela na tela, faz um processamento, e define o valor da variavel de controle como o id da thread
+
+### Observações
+1 - Para verificar a corretude da aplicação, está sendo usado o codigo auxiliar verificaLE.py<br>
+Esse codigo le o arquivo textScript.txt e verifica todas suas chamadas<br>
+Estou disponibilizando tambem um arquivo textScript.txt de exemplo com 14620 instruções para verificação.<br>
+2 - Para gerar um novo arquivo textScript.txt rode o comando <br>
+java lab8 > textScript.txt <br>
+3 - Acabei tendo pouco tempo essa semana para fazer o codigo e por isso ele está um pouco bagunçado, de qualquer forma estou disponivel caso seja necessario alguma explicação mais detalhada.<br>
+***
+
 ## LAB 5
 
 ### Atividade 1
