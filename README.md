@@ -4,6 +4,10 @@
 
 ***
 
+## LAB 9 
+O objetivo desse laboratorio é implementar o metodo de semaforos para o mesmo problema do lab 5.
+***
+
 ## LAB 8
 
 Implementação de uma aplicação concorrente em Java usando o padrão básico **leitores/escritores**
