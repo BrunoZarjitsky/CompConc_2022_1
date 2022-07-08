@@ -1,8 +1,8 @@
 /* 
 Bruno Zarjitsky
-Computação concorrente lab 5
+Computação concorrente lab 10
 DRE: 115117384
-Cria 5 threads que devem seguir uma ordem de execução
+Implementacao produtores/consumidores
 */
 #include<stdio.h>
 #include<stdlib.h>
